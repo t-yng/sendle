@@ -1,4 +1,7 @@
+extern crate kindle_push;
+
 use clap::Clap;
+// use kindle_push::mailer::sendmail;
 
 // driveの使い方の例
 // WARNING: clapのREADME.mdにあるderiveのexampleは正しくないので注意
