@@ -12,3 +12,4 @@ clap = "3.0.0-beta.1"
 
 # リリースされている最新のバージョンだとmasterブランチのexampleが試せないため、masterブランチを参照するようにしています。
 lettre = { git = "https://github.com/lettre/lettre", branch = "master" }
+dotenv = "0.15.0"
