@@ -4,27 +4,31 @@ use std::path::Path;
 use std::fs;
 use dotenv::dotenv;
 use std::env;
-use serde_derive::Serialize;
+use serde_derive::{Serialize, Deserialize};
 
-#[derive(Serialize)]
+#[cfg(test)]
+use mocktopus::macros::*;
+
+#[derive(Serialize, Deserialize)]
 pub struct Kindle {
     pub name: String,
     pub mail_address: String,
     pub default: bool,
 }
 
-#[derive(Serialize)]
-struct Credentials {
+#[derive(Serialize, Deserialize)]
+pub struct Credentials {
     pub user_gmail_address: String,
     pub google_application_password: String,
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, Deserialize)]
 pub struct Config {
     pub kindles: Vec<Kindle>,
     pub credentials: Credentials,
 }
 
+#[mockable]
 impl Config {
 
     pub fn save(kindles: Vec<Kindle>, credentials: Credentials) {
@@ -60,19 +64,79 @@ impl Config {
 #[cfg(test)]
 mod test {
     use super::*;
+    use mocktopus::mocking::*;
 
-    #[test]
-    fn test_save() {
-        // Config::file() をモック化する
-        // <カレントディレクトリ>/.config/sendle/config
-        // Config::save();
-        // Config::read()で内容をアサーションする
+    const TEST_CONFIG_DIR: &str = ".config";
+    const TEST_CONFIG_FILE: &str = ".config/sendle/config";
+
+    // TODO: テストフレームワーク導入して呼び出しは自動化したい
+    fn before_all() {
+        Config::file.mock_safe(|| MockResult::Return(TEST_CONFIG_FILE));
+    }
+
+    fn after_all() {
+        fs::remove_dir_all(TEST_CONFIG_DIR);
     }
 
     #[test]
-    fn test_read() {
-        // 固定文字列でテスト用の設定ファイルを書き込み
-        // Config::read()
-        // 戻り値をアサーションする
+    fn test_save() {
+        before_all();
+        fs::remove_dir_all(TEST_CONFIG_DIR);
+
+        let kindle = Kindle {
+            name: "test".to_string(),
+            mail_address: "test@example.com".to_string(),
+            default: true,
+        };
+        let credentials = Credentials {
+            user_gmail_address: "test@gmail.com".to_string(),
+            google_application_password: "aglfurppkcfkasvs".to_string()
+        };
+
+        Config::save(vec![kindle], credentials);
+
+        let content = fs::read_to_string(TEST_CONFIG_FILE).unwrap();
+        let expected = r#"[[kindles]]
+name = "test"
+mail_address = "test@example.com"
+default = true
+
+[credentials]
+user_gmail_address = "test@gmail.com"
+google_application_password = "aglfurppkcfkasvs"
+"#;
+
+        assert_eq!(content, expected);
+
+        after_all();
+    }
+
+    #[test]
+    fn test_load() {
+        before_all();
+
+        let toml_str = r#"[[kindles]]
+name = "test"
+mail_address = "test@example.com"
+default = true
+
+[credentials]
+user_gmail_address = "test@gmail.com"
+google_application_password = "aglfurppkcfkasvs"
+"#;
+
+        fs::write(TEST_CONFIG_FILE, toml_str);
+
+        let config = Config::load();
+        let kindle = &config.kindles[0];
+        let credentials = &config.credentials;
+
+        assert_eq!(kindle.name, "test");
+        assert_eq!(kindle.mail_address, "test@example.com");
+        assert_eq!(kindle.default, true);
+        assert_eq!(credentials.user_gmail_address, "test@gmail.com");
+        assert_eq!(credentials.google_application_password, "aglfurppkcfkasvs");
+
+        after_all();
     }
 }
