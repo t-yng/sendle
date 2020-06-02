@@ -1,7 +1,7 @@
-extern crate kindle_push;
+extern crate sendle;
 
 use clap::Clap;
-use kindle_push::subcommand::send;
+use sendle::subcommand::send;
 
 // driveの使い方の例
 // WARNING: clapのREADME.mdにあるderiveのexampleは正しくないので注意
