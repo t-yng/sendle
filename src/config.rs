@@ -38,38 +38,21 @@ impl Config {
         fs::write(Config::file(), toml_str).unwrap();
     }
 
-    pub fn read() -> Self {
-        // TODO: 環境変数でなくconfigファイルから読み込むように修正
-        dotenv().ok();
-
-        let kindle_name = env::var("KINDLE_NAME").unwrap().to_string();
-        let kindle_mail_address = env::var("KINDLE_MAIL_ADDRESS").unwrap().to_string();
-        let user_gmail_address = env::var("USER_GMAIL_ADDRESS").unwrap().to_string();
-        let google_application_password = env::var("GOOGLE_APPLICATION_PASSWORD").unwrap().to_string();
-
-        let kindle = Kindle {
-            name: kindle_name,
-            mail_address: kindle_mail_address,
-            default: false,
-        };
-
-        let credentials = Credentials {
-            user_gmail_address,
-            google_application_password,
-        };
-
-        Config {
-            kindles: vec![kindle],
-            credentials,
-        }
+    pub fn load() -> Self {
+        // TODO: 開発用に.env的なファイルで設定値を持てるようにした方が良いかも
+        // TODO: 例外処理
+        let file = Config::file();
+        let content = fs::read_to_string(file).unwrap();
+        toml::from_str(content.as_str()).unwrap()
     }
 
-    fn file<'a>() -> &'a str {
+    fn file() -> &'static str {
         "~/.config/sendle/config"
     }
 
-    fn dir<'a>() -> &'a str {
-        let p = Path::new(Config::file());
+    fn dir() -> &'static str {
+        let file = Config::file();
+        let p = Path::new(file);
         p.parent().unwrap().to_str().unwrap()
     }
 }

@@ -18,12 +18,12 @@ struct SmtpCredentials {
 
 // TODO: 複数のPDFファイルを想定した実装を追加
 pub fn send(files: Vec<String>) -> Result<(), String> {
-    let conf = Config::read();
+    let conf = Config::load();
     let kindle = &conf.kindles[0];
 
     let credentials = SmtpCredentials {
-        user_gmail_address: conf.user_gmail_address,
-        password: conf.google_application_password,
+        user_gmail_address: conf.credentials.user_gmail_address,
+        password: conf.credentials.google_application_password,
     };
 
     let mail = Email {
