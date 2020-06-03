@@ -2,8 +2,6 @@ extern crate toml;
 
 use std::path::Path;
 use std::fs;
-use dotenv::dotenv;
-use std::env;
 use serde_derive::{Serialize, Deserialize};
 
 #[cfg(test)]
@@ -28,7 +26,7 @@ pub struct Config {
     pub credentials: Credentials,
 }
 
-#[mockable]
+#[cfg_attr(test, mockable)]
 impl Config {
 
     pub fn save(kindles: Vec<Kindle>, credentials: Credentials) {
@@ -61,6 +59,8 @@ impl Config {
     }
 }
 
+// NOTO: Mocktopusがnightlyチャンネルでしかビルドできないので
+//       テスト実行はnightlyチャンネルで実行する必要がある
 #[cfg(test)]
 mod test {
     use super::*;
@@ -70,18 +70,18 @@ mod test {
     const TEST_CONFIG_FILE: &str = ".config/sendle/config";
 
     // TODO: テストフレームワーク導入して呼び出しは自動化したい
-    fn before_all() {
+    fn before_each() {
         Config::file.mock_safe(|| MockResult::Return(TEST_CONFIG_FILE));
     }
 
-    fn after_all() {
-        fs::remove_dir_all(TEST_CONFIG_DIR);
+    fn after_each() {
+        fs::remove_dir_all(TEST_CONFIG_DIR).unwrap();
     }
 
     #[test]
     fn test_save() {
-        before_all();
-        fs::remove_dir_all(TEST_CONFIG_DIR);
+        before_each();
+        fs::remove_dir_all(TEST_CONFIG_DIR).unwrap();
 
         let kindle = Kindle {
             name: "test".to_string(),
@@ -108,12 +108,12 @@ google_application_password = "aglfurppkcfkasvs"
 
         assert_eq!(content, expected);
 
-        after_all();
+        after_each();
     }
 
     #[test]
     fn test_load() {
-        before_all();
+        before_each();
 
         let toml_str = r#"[[kindles]]
 name = "test"
@@ -125,7 +125,7 @@ user_gmail_address = "test@gmail.com"
 google_application_password = "aglfurppkcfkasvs"
 "#;
 
-        fs::write(TEST_CONFIG_FILE, toml_str);
+        fs::write(TEST_CONFIG_FILE, toml_str).unwrap();
 
         let config = Config::load();
         let kindle = &config.kindles[0];
@@ -137,6 +137,6 @@ google_application_password = "aglfurppkcfkasvs"
         assert_eq!(credentials.user_gmail_address, "test@gmail.com");
         assert_eq!(credentials.google_application_password, "aglfurppkcfkasvs");
 
-        after_all();
+        after_each();
     }
 }
