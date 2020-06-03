@@ -70,22 +70,26 @@ mod test {
     use super::*;
     use mocktopus::mocking::*;
 
-    const TEST_CONFIG_DIR: &str = ".config";
+    const TEST_CONFIG_ROOT_DIR: &str = ".config";
+    const TEST_CONFIG_DIR: &str = ".config/sendle";
     const TEST_CONFIG_FILE: &str = ".config/sendle/config";
 
     // TODO: テストフレームワーク導入して呼び出しは自動化したい
     fn before_each() {
-        Config::file.mock_safe(|| MockResult::Return(TEST_CONFIG_FILE));
+        Config::file.mock_safe(|| MockResult::Return(TEST_CONFIG_FILE.to_string()));
+        fs::create_dir_all(TEST_CONFIG_DIR).unwrap();
     }
 
     fn after_each() {
-        fs::remove_dir_all(TEST_CONFIG_DIR).unwrap();
+        fs::remove_dir_all(TEST_CONFIG_ROOT_DIR).unwrap();
     }
 
     #[test]
     fn test_save() {
         before_each();
-        fs::remove_dir_all(TEST_CONFIG_DIR).unwrap();
+        if Path::new(TEST_CONFIG_FILE).exists() {
+            fs::remove_file(TEST_CONFIG_FILE).unwrap();
+        }
 
         let kindle = Kindle {
             name: "test".to_string(),
@@ -97,7 +101,7 @@ mod test {
             google_application_password: "aglfurppkcfkasvs".to_string()
         };
 
-        Config::save(vec![kindle], credentials);
+        Config::save(vec![kindle], credentials).unwrap();
 
         let content = fs::read_to_string(TEST_CONFIG_FILE).unwrap();
         let expected = r#"[[kindles]]
