@@ -3,6 +3,7 @@ extern crate home;
 
 use std::path::Path;
 use std::fs;
+use std::io;
 use serde_derive::{Serialize, Deserialize};
 
 #[cfg(test)]
@@ -30,7 +31,7 @@ pub struct Config {
 #[cfg_attr(test, mockable)]
 impl Config {
 
-    pub fn save(kindles: Vec<Kindle>, credentials: Credentials) {
+    pub fn save(kindles: Vec<Kindle>, credentials: Credentials) -> io::Result<()>{
         let config = Config {
             kindles,
             credentials,
@@ -38,7 +39,7 @@ impl Config {
 
         let toml_str = toml::to_string(&config).unwrap();
         fs::create_dir_all(Config::dir()).unwrap();
-        fs::write(Config::file(), toml_str).unwrap();
+        fs::write(Config::file(), toml_str)
     }
 
     pub fn load() -> Self {
