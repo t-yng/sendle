@@ -1,4 +1,5 @@
 extern crate toml;
+extern crate home;
 
 use std::path::Path;
 use std::fs;
@@ -48,14 +49,16 @@ impl Config {
         toml::from_str(content.as_str()).unwrap()
     }
 
-    fn file() -> &'static str {
-        "~/.config/sendle/config"
+    pub fn file() -> String {
+        let home_path = home::home_dir().unwrap();
+        let home = home_path.to_str().unwrap();
+        format!("{}/.config/sendle/config", home)
     }
 
-    fn dir() -> &'static str {
+    fn dir() -> String {
         let file = Config::file();
-        let p = Path::new(file);
-        p.parent().unwrap().to_str().unwrap()
+        let p = Path::new(&file);
+        p.parent().unwrap().to_str().unwrap().to_string()
     }
 }
 
