@@ -1,7 +1,6 @@
 [package]
 # TODO: パッケージ名は変更したい
-name = "kindle_push"
-version = "0.1.0"
+version = "0.2.0"
 authors = ["t-yng <t.yng.greenmonkey@gmail.com>"]
 edition = "2018"
 
