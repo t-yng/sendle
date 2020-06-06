@@ -15,13 +15,13 @@ TODO: publish this.
 ### Setup
 
 Sendle uses gmail smtp server to send email to your kindle.  
-You need to set credentials for gmail smtp server and a kindle info you will send pdf files.
+You need to set credentials for gmail smtp server and kindle info you will send pdf files.
 
-| Key                         | Default | Description                                                                                                                                           |
-|-----------------------------|---------|-------------------------------------------------------------------------------------------------------------------------------------------------------|
-| gmail_address               | -       | Your gmail address that will be used send email to kindles.                                                                                           |
-| google_application_password | -       | Application password to certify smtp server.<br>Please read below how to get your application password. <br> [Google App Passwords](https://support.google.com/mail/answer/185833?hl=en)                                           |
-| kindle_name                 | default | Kindle name to be managed by this tool.                                                                                                               |
+| Key                         | Default | Description |
+|-----------------------------|---------|-------------|
+| gmail_address               | -       | Your gmail address that will be used send email to kindles. |
+| google_application_password | -       | Application password to certify smtp server.<br>Please read below how to get your application password. <br> [Google App Passwords](https://support.google.com/mail/answer/185833?hl=en) |
+| kindle_name                 | default | Kindle name to be managed by Sendle. <br> Any Value is Ok. |
 | kindle_mail_address         | -       | Send to Kindle mail address. <br> Please read below, how to get the mail address. <br> [Send to Kindle by E-mail](https://www.amazon.com/gp/sendtokindle/email) |
 
 ```sh
