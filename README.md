@@ -2,7 +2,7 @@
 
 This is cli tool to send pdf files to your kindle.
 
-```
+```sh
 $ sendle send linux.pdf
 ```
 
@@ -24,7 +24,7 @@ You need to set credentials for gmail smtp server and a kindle info you will sen
 | kindle_name                 | default | Kindle name to be managed by this tool.                                                                                                               |
 | kindle_mail_address         | -       | Send to Kindle mail address. <br> Please read below, how to get the mail address. <br> [Send to Kindle by E-mail](https://www.amazon.com/gp/sendtokindle/email) |
 
-```
+```sh
 $ sendle config
 gmail_address: example@gmail.com
 google_application_password: expfldodhykovwjf
@@ -34,7 +34,7 @@ kindle_mail_address: example_K4HblsQ4@gmail.com
 
 ### Send pdf files
 
-```
+```sh
 $ sendle send linux.pdf
 ```
 
@@ -45,6 +45,6 @@ You must use nightly build to run unit tests.
 
 Because this repository uses [CodeSandwich/Mocktopus](https://github.com/CodeSandwich/Mocktopus) as mocking libray and it depends on nightly build because of using `#![feature]`.
 
-```
+```sh
 $ rustup run nightly cargo t
 ```
