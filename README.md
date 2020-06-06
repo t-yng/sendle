@@ -43,7 +43,7 @@ $ sendle send linux.pdf
 ### Unit Test
 You must use nightly build to run unit tests.
 
-Sendle uses [CodeSandwich/Mocktopus](https://github.com/CodeSandwich/Mocktopus) as mocking libray and it depends on nightly build because of using `#![feature]`.
+Sendle uses [CodeSandwich/Mocktopus](https://github.com/CodeSandwich/Mocktopus) as mocking libray and it depends on nightly build because of using `#![feature(fn_traits, unboxed_closures)]`.
 
 ```sh
 $ rustup run nightly cargo t
