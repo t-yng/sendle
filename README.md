@@ -8,7 +8,7 @@ $ sendle send linux.pdf
 
 ## Installation
 
-In develop
+TODO: publish this.
 
 ## How to use
 
