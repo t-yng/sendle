@@ -24,17 +24,17 @@ pub struct Credentials {
 
 #[derive(Serialize, Deserialize)]
 pub struct Config {
-    pub kindles: Vec<Kindle>,
     pub credentials: Credentials,
+    pub kindles: Vec<Kindle>,
 }
 
 #[cfg_attr(test, mockable)]
 impl Config {
 
-    pub fn save(kindles: Vec<Kindle>, credentials: Credentials) -> io::Result<()>{
+    pub fn save(credentials: Credentials, kindles: Vec<Kindle>) -> io::Result<()>{
         let config = Config {
-            kindles,
             credentials,
+            kindles,
         };
 
         let toml_str = toml::to_string(&config).unwrap();

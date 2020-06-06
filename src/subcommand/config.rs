@@ -24,7 +24,7 @@ pub fn config() -> io::Result<()> {
         google_application_password,
     };
 
-    Config::save(vec![kindle], credentials)
+    Config::save(credentials, vec![kindle])
 }
 
 fn get_user_input_default(prompt: &str, default: &str) -> Result<String, io::Error> {
