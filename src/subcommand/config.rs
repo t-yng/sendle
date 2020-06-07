@@ -1,7 +1,7 @@
 use std::io::{self, Write};
-use crate::config::{Credential, Kindle, Config};
+use crate::config::{Credential, Kindle, Config, ConfigFile};
 
-pub fn config() -> io::Result<()> {
+pub fn config(file: &ConfigFile) -> io::Result<()> {
     let kindle_name_default = "default";
 
     // TODO: バリデーションを追加
@@ -25,7 +25,7 @@ pub fn config() -> io::Result<()> {
     };
 
     let config = Config::new(credential, vec![kindle]);
-    config.save()
+    config.save(&file)
 }
 
 fn get_user_input_default(prompt: &str, default: &str) -> Result<String, io::Error> {
