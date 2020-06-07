@@ -7,11 +7,11 @@ use crate::config::{Config};
 
 struct Email {
     pub to_address: String,
-    pub smtp_credentials:  SmtpCredentials,
+    pub smtp_credential:  SmtpCredential,
     pub file:  String,
 }
 
-struct SmtpCredentials {
+struct SmtpCredential {
     pub user_gmail_address: String,
     pub password: String,
 }
@@ -21,14 +21,14 @@ pub fn send(files: Vec<String>) -> Result<(), String> {
     let conf = Config::load();
     let kindle = &conf.kindles[0];
 
-    let credentials = SmtpCredentials {
-        user_gmail_address: conf.credentials.user_gmail_address,
-        password: conf.credentials.google_application_password,
+    let smtp_credential = SmtpCredential {
+        user_gmail_address: conf.credential.user_gmail_address,
+        password: conf.credential.google_application_password,
     };
 
     let mail = Email {
         to_address: kindle.mail_address.clone(),
-        smtp_credentials: credentials,
+        smtp_credential,
         file: files[0].clone(),
     };
 
@@ -55,7 +55,7 @@ fn sendmail(mail: &Email) -> Result<(), String> {
     // @see: https://github.com/lettre/lettre/blob/master/src/message/mod.rs
     let email = Message::builder()
         .to(mail.to_address.parse().unwrap())
-        .from(mail.smtp_credentials.user_gmail_address.parse().unwrap())
+        .from(mail.smtp_credential.user_gmail_address.parse().unwrap())
         .subject("send some files to my kindle by kindle-push")
         .multipart(
             MultiPart::mixed()
@@ -84,8 +84,8 @@ fn sendmail(mail: &Email) -> Result<(), String> {
         .unwrap();
 
     let credentials = Credentials::new(
-        mail.smtp_credentials.user_gmail_address.to_string(),
-        mail.smtp_credentials.password.to_string(),
+        mail.smtp_credential.user_gmail_address.to_string(),
+        mail.smtp_credential.password.to_string(),
     );
 
     let mailer = SmtpTransport::relay(smtp_server)

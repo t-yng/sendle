@@ -17,23 +17,23 @@ pub struct Kindle {
 }
 
 #[derive(Serialize, Deserialize)]
-pub struct Credentials {
+pub struct Credential {
     pub user_gmail_address: String,
     pub google_application_password: String,
 }
 
 #[derive(Serialize, Deserialize)]
 pub struct Config {
-    pub credentials: Credentials,
+    pub credential: Credential,
     pub kindles: Vec<Kindle>,
 }
 
 #[cfg_attr(test, mockable)]
 impl Config {
 
-    pub fn save(credentials: Credentials, kindles: Vec<Kindle>) -> io::Result<()>{
+    pub fn save(credential: Credential, kindles: Vec<Kindle>) -> io::Result<()>{
         let config = Config {
-            credentials,
+            credential,
             kindles,
         };
 
@@ -96,7 +96,7 @@ mod test {
             mail_address: "test@example.com".to_string(),
             default: true,
         };
-        let credentials = Credentials {
+        let credentials = Credential {
             user_gmail_address: "test@gmail.com".to_string(),
             google_application_password: "aglfurppkcfkasvs".to_string()
         };
@@ -137,7 +137,7 @@ google_application_password = "aglfurppkcfkasvs"
 
         let config = Config::load();
         let kindle = &config.kindles[0];
-        let credentials = &config.credentials;
+        let credentials = &config.credential;
 
         assert_eq!(kindle.name, "test");
         assert_eq!(kindle.mail_address, "test@example.com");
