@@ -31,13 +31,15 @@ pub struct Config {
 #[cfg_attr(test, mockable)]
 impl Config {
 
-    pub fn save(credential: Credential, kindles: Vec<Kindle>) -> io::Result<()>{
-        let config = Config {
+    pub fn new(credential: Credential, kindles: Vec<Kindle>) -> Self {
+        Config {
             credential,
             kindles,
-        };
+        }
+    }
 
-        let toml_str = toml::to_string(&config).unwrap();
+    pub fn save(&self) -> io::Result<()>{
+        let toml_str = toml::to_string(&self).unwrap();
         fs::create_dir_all(Config::dir()).unwrap();
         fs::write(Config::file(), toml_str)
     }
@@ -96,22 +98,22 @@ mod test {
             mail_address: "test@example.com".to_string(),
             default: true,
         };
-        let credentials = Credential {
+        let credential = Credential {
             user_gmail_address: "test@gmail.com".to_string(),
             google_application_password: "aglfurppkcfkasvs".to_string()
         };
-
-        Config::save(vec![kindle], credentials).unwrap();
+        let config = Config::new(credential, vec![kindle]);
+        config.save().unwrap();
 
         let content = fs::read_to_string(TEST_CONFIG_FILE).unwrap();
-        let expected = r#"[[kindles]]
+        let expected = r#"[credential]
+user_gmail_address = "test@gmail.com"
+google_application_password = "aglfurppkcfkasvs"
+
+[[kindles]]
 name = "test"
 mail_address = "test@example.com"
 default = true
-
-[credentials]
-user_gmail_address = "test@gmail.com"
-google_application_password = "aglfurppkcfkasvs"
 "#;
 
         assert_eq!(content, expected);
@@ -123,14 +125,14 @@ google_application_password = "aglfurppkcfkasvs"
     fn test_load() {
         before_each();
 
-        let toml_str = r#"[[kindles]]
+        let toml_str = r#"[credential]
+user_gmail_address = "test@gmail.com"
+google_application_password = "aglfurppkcfkasvs"
+
+[[kindles]]
 name = "test"
 mail_address = "test@example.com"
 default = true
-
-[credentials]
-user_gmail_address = "test@gmail.com"
-google_application_password = "aglfurppkcfkasvs"
 "#;
 
         fs::write(TEST_CONFIG_FILE, toml_str).unwrap();
