@@ -16,6 +16,7 @@ toml = "0.5.6"
 serde = "1.0.110"
 serde_derive = "1.0.110"
 home = "0.5.3"
+cfg-if = "0.1.10"
 
 [dev-dependencies]
-mocktopus = "0.7.5"
+mockall = "0.7.1"

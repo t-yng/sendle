@@ -1,7 +1,7 @@
 use std::io::{self, Write};
-use crate::config::{Credentials, Kindle, Config};
+use crate::config::{Credential, Kindle, Config, ConfigFile};
 
-pub fn config() -> io::Result<()> {
+pub fn config(file: &ConfigFile) -> io::Result<()> {
     let kindle_name_default = "default";
 
     // TODO: バリデーションを追加
@@ -19,12 +19,13 @@ pub fn config() -> io::Result<()> {
         mail_address: kindle_mail_address,
         default: true
     };
-    let credentials = Credentials {
+    let credential = Credential {
         user_gmail_address,
         google_application_password,
     };
 
-    Config::save(credentials, vec![kindle])
+    let config = Config::new(credential, vec![kindle]);
+    config.save(&file)
 }
 
 fn get_user_input_default(prompt: &str, default: &str) -> Result<String, io::Error> {

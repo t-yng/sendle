@@ -32,17 +32,19 @@ struct Config {}
 
 fn main() {
     let opt = Opt::parse();
+    let file = config::ConfigFile::new();
     match opt.subcommand {
         SubCommand::Send(args) => {
+            let config = config::Config::load(&file);
             println!("sending pdf files ...");
-            match subcommand::send(args.input) {
+            match subcommand::send(args.input, &config) {
                 Ok(()) => println!("succeeded send pdf files."),
                 Err(err) => println!("failed send pdf files:\n{}", err),
             };
         },
         SubCommand::Config(_) => {
-            match subcommand::config() {
-                Ok(()) => println!("create config file {}", config::Config::file()),
+            match subcommand::config(&file) {
+                Ok(()) => println!("create config file {}", file.path_str()),
                 Err(err) => println!("failed create config file: \n{}", err.to_string()),
             }
         }
