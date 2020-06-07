@@ -33,9 +33,9 @@ struct Config {}
 fn main() {
     let opt = Opt::parse();
     let file = config::ConfigFile::new();
-    let config = config::Config::load(&file);
     match opt.subcommand {
         SubCommand::Send(args) => {
+            let config = config::Config::load(&file);
             println!("sending pdf files ...");
             match subcommand::send(args.input, &config) {
                 Ok(()) => println!("succeeded send pdf files."),
