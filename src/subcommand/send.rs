@@ -16,8 +16,8 @@ struct SmtpCredential {
     pub password: String,
 }
 
-// TODO: 複数のPDFファイルを想定した実装を追加
-pub fn send(files: Vec<String>, config: &Config) -> Result<(), String> {
+// TODO: send multiple files
+pub fn send(files: &Vec<String>, config: &Config) -> Result<(), String> {
     let kindle = &config.kindles[0];
 
     let smtp_credential = SmtpCredential {
@@ -30,6 +30,8 @@ pub fn send(files: Vec<String>, config: &Config) -> Result<(), String> {
         smtp_credential,
         file: files[0].clone(),
     };
+
+    println!("sending: {}", files[0]);
 
     sendmail(&mail)
 }

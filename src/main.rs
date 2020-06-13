@@ -1,5 +1,4 @@
-extern crate sendle;
-
+use colored::*;
 use clap::Clap;
 use sendle::subcommand;
 use sendle::config;
@@ -36,16 +35,16 @@ fn main() {
     match opt.subcommand {
         SubCommand::Send(args) => {
             let config = config::Config::load(&file);
-            println!("sending pdf files ...");
-            match subcommand::send(args.input, &config) {
-                Ok(()) => println!("succeeded send pdf files."),
-                Err(err) => println!("failed send pdf files:\n{}", err),
+            println!("sending pdf files");
+            match subcommand::send(&args.input, &config) {
+                Ok(()) => println!("\n{}", "Send pdf files complete!".bright_green().bold()),
+                Err(err) => println!("{}:\n{}", "failed send pdf files".red(), err.red()),
             };
         },
         SubCommand::Config(_) => {
             match subcommand::config(&file) {
-                Ok(()) => println!("create config file {}", file.path_str()),
-                Err(err) => println!("failed create config file: \n{}", err.to_string()),
+                Ok(()) => println!("\n{}: {}", "Created config file".bright_green().bold(), file.path_str()),
+                Err(err) => println!("{}:\n{}", "failed create config file".red(), err.to_string().red()),
             }
         }
     }
