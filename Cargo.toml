@@ -18,6 +18,7 @@ serde_derive = "1.0.110"
 home = "0.5.3"
 cfg-if = "0.1.10"
 colored = "1.9.3"
+rpassword = "4.0.5"
 
 [dev-dependencies]
 mockall = "0.7.1"
