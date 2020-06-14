@@ -106,7 +106,7 @@ fn sendmail(mail: &Email) -> Result<(), String> {
 #[cfg(test)]
 
 mod test {
-    use super::*;
+    // use super::*;
 
     // TODO: 設定ファイルをスタブ化する
     // テストこけるので一旦無視する
