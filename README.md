@@ -1,4 +1,5 @@
 # sendle
+![CI](https://github.com/t-yng/sendle/workflows/CI/badge.svg)
 
 This is cli tool to send pdf files to your kindle.
 
