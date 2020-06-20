@@ -9,7 +9,12 @@ $ sendle send linux.pdf
 
 ## Installation
 
-TODO: publish this.
+### Homebrew
+
+```sh
+$ brew tap t-yng/sendle
+$ brew install t-yng/sendle/sendle
+```
 
 ## How to use
 
